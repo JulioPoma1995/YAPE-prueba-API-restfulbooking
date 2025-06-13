@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/JulioPoma1995/restful-booking.git'
+                git branch: 'main', url: 'https://github.com/JulioPoma1995/YAPE-prueba-API-restfulbooking.git'
             }
         }
 
