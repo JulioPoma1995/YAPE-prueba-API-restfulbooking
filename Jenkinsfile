@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'principal' }
+    agent { label 'any' }
 
     environment {
         MAVEN_HOME = tool 'Maven'
@@ -27,7 +27,7 @@ pipeline {
 
     post {
         always {
-             node(label: 'principal') {
+             node(label: 'any') {
                      junit '**/target/surefire-reports/*.xml'
                    }
         }
