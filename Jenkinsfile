@@ -1,5 +1,5 @@
 pipeline {
-    agent principal
+    agent { label 'principal' }
 
     environment {
         MAVEN_HOME = tool 'Maven'
