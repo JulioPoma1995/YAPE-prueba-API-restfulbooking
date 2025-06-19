@@ -1,38 +1,41 @@
 pipeline {
     agent { label 'any' }
-
-    environment {
-        MAVEN_HOME = tool 'Maven'
+   tools {
+        git 'GitGlobal'
     }
-
     stages {
-         stage('Checkout') {
-                    steps {
-                        checkout([$class: 'GitSCM',
-                            branches: [[name: '*/main']],
-                            userRemoteConfigs: [[url: 'https://github.com/JulioPoma1995/YAPE-prueba-API-restfulbooking.git']]
-                        ])
-                    }
-        }
-
-        stage('Build') {
+        stage('Checkout SCM') {
             steps {
-                sh "${MAVEN_HOME}/bin/mvn clean install"
+                script {
+                    checkout scm
+                }
             }
         }
-
-        stage('Run Tests') {
+        stage('Install Dependencies') {
             steps {
-                sh "${MAVEN_HOME}/bin/mvn test -Dcucumber.filter.tags='@healthcheckPing'"
+                script {
+                    sh 'mvn install'
+                }
+            }
+        }
+        stage('Run API Tests') {
+            steps {
+                script {
+                    sh 'mvn test -Dkarate.options="--tags @auth"'
+                }
             }
         }
     }
 
     post {
         always {
-             node(label: 'any') {
-                     junit '**/target/surefire-reports/*.xml'
-                   }
+            echo 'Pipeline finished!'
+        }
+        success {
+            echo 'Pipeline finished successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }
